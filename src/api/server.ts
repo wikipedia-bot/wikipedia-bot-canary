@@ -8,16 +8,17 @@ import { expressLogger, logger } from '../utils';
 export class api {
   app: express.Application;
   port: number;
-  instance: any;
+  instance: string;
 
   // instance is our instance id
-  constructor(PORT: number, INSTANCE: any) {
+  constructor(PORT: number, INSTANCE: string) {
     this.app = express();
     this.port = PORT;
     this.instance = INSTANCE;
 
-    const commands: Map<string, any> = new Map();
+    const commands: Map<string, unknown> = new Map();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const routes: Map<string, any> = new Map();
 
     readdirSync(join(__dirname + '/routes/api/v1'))
@@ -42,7 +43,7 @@ export class api {
           );
 
           logger.info(
-            `[${INSTANCE}] [API] Registering the route /api/v1/${routeFile.route.name} [POST]`,
+            `[${INSTANCE}] [API] Registering the route: /api/v1/${routeFile.route.name} [POST]`,
           );
         }
       });
@@ -54,11 +55,18 @@ export class api {
     )
       .filter(
         (file) =>
-          !file.startsWith('_') && file.endsWith('.js'),
+          !file.startsWith('_') &&
+          !file.endsWith('.js.map') &&
+          file.endsWith('.js'),
       )
-      .forEach((f) => {
-        const interaction = require('../modules/interactions/commands/' +
-          f);
+      .forEach(async (f) => {
+        const interaction = await import(
+          `../modules/interactions/commands/${f}`
+        );
+        // for some reason its still importing the
+        // source maps even tho I tried to filter it
+        if (interaction.default) return;
+
         if (
           interaction.command.id === 'ID' ||
           interaction.command.id === ''
@@ -68,10 +76,14 @@ export class api {
           interaction.command.id,
           interaction.command,
         );
+        logger.info(
+          `[${INSTANCE}] [CMD] Registering command: ${interaction.command.name}`,
+        );
       });
 
     this.app.use(
       bodyparser.json({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         verify: (req: any, res, buf) => {
           req.rawBody = buf;
         },
@@ -90,25 +102,6 @@ export class api {
           commands,
         );
     });
-
-    readdirSync(
-      join(
-        __dirname + '../../modules/interactions/commands',
-      ),
-    )
-      .filter(
-        (file) =>
-          !file.startsWith('_') && file.endsWith('.js'),
-      )
-      .forEach(async (f) => {
-        const interaction = await import(
-          '../modules/interactions/commands/' + f
-        );
-        commands.set(
-          interaction.command.id,
-          interaction.command.execute,
-        );
-      });
 
     // RequestHandler creates a separate execution context using domains, so that every
     // transaction/span/breadcrumb is attached to its own Hub instance

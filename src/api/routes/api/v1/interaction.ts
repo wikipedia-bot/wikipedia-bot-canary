@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { interaction } from './../../../../@types/interaction';
 import tweetnacl from 'tweetnacl';
 import { logger } from '../../../../utils';
-import * as Sentry from '@sentry/node';
 
 export const route = {
   name: 'interaction',
   method: 'POST',
   route: async (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res: any,
-    commands: Map<string, any>,
+    commands: Map<string, unknown>,
   ): Promise<void> => {
     // Your public key can be found on your application in the Developer Portal
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let PUBLIC_KEY: any = process.env.PUBLIC_KEY;
     PUBLIC_KEY = PUBLIC_KEY.toString();
 
@@ -31,18 +35,24 @@ export const route = {
     }
 
     if (isVerified) {
-      res.status(200);
+      res.status(200).send({ type: 1 });
 
-      const interaction: any = req.body;
+      const interaction: interaction = req.body;
+
+      if (!interaction.data) return;
 
       if (commands.has(interaction.data.id)) {
-        const func = commands.get(interaction.data.id);
         try {
-          func.execute(interaction);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const func: any = commands.get(
+            interaction.data.id,
+          );
+          await func.execute(interaction);
           logger.info(
             `[INTERACTION] Received interaction: '${interaction.data.name}'; by user: '${interaction.member.user.username}#${interaction.member.user.discriminator}';`,
           );
         } catch (e) {
+          console.error(e);
           logger.error(e);
         }
       }

@@ -1,11 +1,11 @@
-(async () => {
-  (await import('dotenv')).config();
-})();
-
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 import prompts from 'prompts';
 import { DiscordInteractions } from 'slash-commands';
+
+// load our env variables
+dotenv.config();
 
 const config = {
   applicationId: process.env.APPLICATION_ID,
@@ -24,6 +24,7 @@ fs.readdirSync(path.join(__dirname + '/commands'))
     });
   });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const questions: any = [
   {
     type: 'multiselect',
@@ -47,8 +48,8 @@ const questions: any = [
 
     await interaction
       .createApplicationCommand(raw)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((data: any) => {
-        //console.log(data)
         if (
           data.message &&
           data.message.includes('401: Unauthorized')
@@ -66,6 +67,22 @@ const questions: any = [
                   
                   _________________________________
                   `);
+        } else if (
+          data.message &&
+          data.message.includes('Invalid Form Body')
+        ) {
+          console.error(`
+                  _________________________________
+
+                  [503] Invalid Form Body
+
+                  Failed to register the command, check
+                  your command formatting and try again.
+                  
+                  _________________________________
+          `);
+        } else {
+          console.error(data);
         }
         if (data.id) {
           console.log(`
@@ -79,7 +96,7 @@ const questions: any = [
                   Desc:        ${data.description}
                   
                   _________________________________`);
-        }
+        } else console.error(data);
       })
       .catch(console.error);
   }

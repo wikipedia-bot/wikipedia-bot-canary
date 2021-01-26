@@ -1,6 +1,4 @@
-interface snowflake {
-  snowflake: string;
-}
+import { Snowflake } from 'slash-commands';
 
 interface InteractionType {
   InteractionType: number;
@@ -10,7 +8,7 @@ interface GuildMember {
   user: {
     username: string;
     public_flags: string;
-    id: snowflake;
+    id: Snowflake;
     discriminator: string;
     avatar: string;
   };
@@ -27,18 +25,18 @@ interface GuildMember {
 
 interface ApplicationCommandInteractionDataOption {
   name: string;
-  value?: any;
-  options?: Object[];
+  value?: unknown;
+  options?: Record<string, unknown>;
 }
 
 interface ApplicationCommandInteractionData {
-  id: snowflake;
+  id: Snowflake;
   name: string;
   options?: ApplicationCommandInteractionDataOption[];
 }
 
 export interface interaction {
-  id: snowflake;
+  id: Snowflake;
   type: InteractionType; // InteractionType (1-2)
   token: string;
   guild_id: string;

@@ -1,5 +1,4 @@
 import wiki from '../../wiki/functions';
-import { logger } from '../../../utils';
 import methods from '../methods';
 import { interaction } from '../../../@types/interaction';
 
@@ -69,7 +68,9 @@ export const command = {
     interaction: interaction,
   ): Promise<void> => {
     // send an initial response to edit later
-    const returned = await methods.reply(
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const returned: any = await methods.reply(
       interaction,
       'LOADING, PLEASE WAIT ...',
       4,
@@ -81,7 +82,9 @@ export const command = {
     if (!interaction.data) return;
 
     for (const option in interaction.data.options) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const index: any = option;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const temp: any = interaction.data.options[index];
       if (temp.name === 'search-term') {
         searchValue = temp.value;
@@ -92,7 +95,8 @@ export const command = {
       }
     }
 
-    const returnedObject = await wiki.getSummary(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const returnedObject: any = await wiki.getSummary(
       searchValue,
       searchLang,
     );
@@ -104,17 +108,17 @@ export const command = {
         'Something went wrong .... :(  maybe try another search term and try again... ',
       );
     } else {
-      const desc_long: any = await returnedObject
-        .results[3];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const desc_long: any = await returnedObject.wiki.text;
       const desc = desc_long.substr(0, 1169) + '.....';
 
       await methods.deleteOriginal(returned.data.token);
       await methods.embed.defaultWikiEmbed(
         returned.data.token,
         {
-          title: returnedObject.results[0],
-          url: returnedObject.results[1],
-          thumb: returnedObject.results[2],
+          title: returnedObject.wiki.title,
+          url: returnedObject.wiki.url,
+          thumb: returnedObject.wiki.image,
           desc,
         },
       );

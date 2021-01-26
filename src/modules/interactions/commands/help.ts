@@ -1,5 +1,3 @@
-import wiki from '../../wiki/functions';
-import { logger } from '../../../utils';
 import methods from '../methods';
 import { interaction } from '../../../@types/interaction';
 
@@ -67,23 +65,33 @@ export const command = {
   execute: async (
     interaction: interaction,
   ): Promise<void> => {
-    const returned = await methods.reply(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const returned: any = await methods.reply(
       interaction,
       'LOADING, PLEASE WAIT ...',
     );
 
     if (interaction.data && interaction.data.options) {
       // display help for specific command here
-      const command = interaction.data.options[0].value;
-      const cmd = require('../commands/' + command + '.js');
-      const desc = cmd.command.help;
-      await methods.embed.defaultEmbed(
-        returned.data.token,
-        {
-          title: 'Help',
-          desc,
-        },
-      );
+      const commandname = interaction.data.options[0].value;
+      // eslint-disable-next-line prettier/prettier
+      const { command } = await import('../commands/' + commandname +'.js'); 
+      if (!command.help || command.help === '') {
+        methods.embed.defaultErrorEmbed(
+          returned.data.token,
+          `There seems to be no documentation for the command
+        
+          __**[${commandname}]**__`,
+        );
+      } else {
+        await methods.embed.defaultEmbed(
+          returned.data.token,
+          {
+            title: 'Help',
+            desc: command.help,
+          },
+        );
+      }
       await methods.deleteOriginal(returned.data.token);
     } else {
       await methods.deleteOriginal(returned.data.token);

@@ -1,6 +1,6 @@
 <h1 align="center">🌍 Wikipedia Canary Bot (Beta) 🌎</h1>
 
-<h2 align="center"><a href="https://discordapp.com/oauth2/authorize?client_id=554751047030013953&scope=bot&permissions=3467328"> Add it to your server </a></h2>
+<h2 align="center"><a href="https://discord.com/oauth2/authorize?client_id=557923645532536852&scope=applications.commands"> Add it to your server WARNING: THIS IS A BETA VERSION</a></h2>
 
 
 <a href="https://discord.gg/yAUmDNb">
@@ -9,8 +9,8 @@
 <a href="https://discordapp.com/oauth2/authorize?client_id=554751047030013953&scope=bot&permissions=3467328">
     <img src="https://img.shields.io/badge/Discord-Add%20Bot-7289DA.svg"/>
 </a>
-<a href="https://github.com/julianYaman/wikipedia-bot/blob/master/LICENSE">
-<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" target="_blank" />
+<a href="https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/LICENSE">
+<img alt="License: MIT" src="https://img.shields.io/github/license/wikipedia-bot/wikipedia-bot-canary" target="_blank" />
 </a>
 
 ### 🏠 [Homepage & Commands](https://julianyaman.de)
@@ -33,7 +33,7 @@ currently under planning and development on our new [**Notion Board**](https://w
 
 If you have some more ideas to improve the bot, please let me know on Discord or here on GitHub Issues.
 
-## 🙌 Support the developer
+## 🙌 Support the developer(s)
 
 I would appreciate it, if you give a ⭐️ when you like this project!
 
@@ -72,10 +72,10 @@ Any type of contribution is welcome. Even reporting bugs or suggesting new featu
 does help a lot to improve the bot.
 
 **If you want to contribute to the codebase of this project, please follow the 
-[contributing guidelines](https://github.com/julianYaman/wikipedia-bot/blob/master/docs/CONTRIBUTING.md).**
+[contributing guidelines](https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/docs/CONTRIBUTING.md).**
 
 Here is also the link to the 
-[**Code of Conduct**](https://github.com/julianYaman/wikipedia-bot/blob/master/docs/CODE_OF_CONDUCT.md).
+[**Code of Conduct**](https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/docs/CODE_OF_CONDUCT.md).
 
 ### ✏️ Want to give Feedback?
 You can reach me out here:
@@ -86,13 +86,10 @@ You want to report a bug? You can do that on Discord or here on GitHub.
 
 ### 📎 Short links
 
-- [**License**](https://github.com/julianYaman/wikipedia-bot/blob/master/LICENSE)
-- [**Contributing guidelines**](https://github.com/julianYaman/wikipedia-bot/blob/master/docs/CONTRIBUTING.md)
-- [**Code of Conduct**](https://github.com/julianYaman/wikipedia-bot/blob/master/docs/CODE_OF_CONDUCT.md)
+- [**License**](https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/LICENSE)
+- [**Contributing guidelines**](https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/docs/CONTRIBUTING.md)
+- [**Code of Conduct**](https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/docs/CODE_OF_CONDUCT.md)
 
-## 📝 License
 
-Copyright © 2021 [Julian Yaman <julianyaman@posteo.eu>](https://julianyaman.de).<br />
-This project is [MIT](https://github.com/julianYaman/wikipedia-bot/blob/master/LICENSE) licensed.
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FjulianYaman%2Fwikipedia-bot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FjulianYaman%2Fwikipedia-bot?ref=badge_large)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwikipedia-bot%2Fwikipedia-bot-canary.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwikipedia-bot%2Fwikipedia-bot-canary?ref=badge_large)

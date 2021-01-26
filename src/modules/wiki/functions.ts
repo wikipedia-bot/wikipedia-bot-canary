@@ -1,35 +1,28 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import wiki from 'wikijs';
 import Constants from '../constants/Constants';
 import * as Sentry from '@sentry/node';
+import returnobject from '../../@types/returnobject';
+
+const returnobject: returnobject = { error: false };
 
 export default {
   /**
    * Function that returns a returnobject with an error or the requested information
    * @function getSummary
-   * @param {String} argument - Argument sent by the user (!wiki [argument])
-   * @param {String} lang - Language in which the result should be sent.
-   *
-   * @returns {Object} returnobject:
-   * {
-   *      error: Boolean,
-   *      results: Array[
-   *          title,
-   *          fullurl,
-   *          mainImage,
-   *          summary
-   *      ]
-   * }
-   *
+   * @param {string} argument - Argument sent by the user (!wiki [argument])
+   * @param {string} lang - Language in which the result should be sent.
+   * @returns {returnobject} returnobject
    */
-  getSummary: async (argument: string, lang = 'en') => {
+  getSummary: async (
+    argument: string,
+    lang = 'en',
+  ): Promise<returnobject> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiUrl: any = Constants.apiUrl;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const headers: any = Constants.headers;
     const apiString: string = apiUrl[lang];
-
-    const returnobject = {
-      error: false,
-      results: [Promise],
-    };
 
     if (apiString === undefined)
       apiUrl = 'https://en.wikipedia.org/w/api.php';
@@ -41,19 +34,21 @@ export default {
         // @ts-ignore
         headers,
       }).search(argument);
-      const wikiPage = await wiki({
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const wikiPage: any = await wiki({
         apiUrl: apiString,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         headers,
       }).page(search.results[0]);
 
-      returnobject.results = await Promise.all([
-        wikiPage.raw.title,
-        wikiPage.raw.fullurl,
-        wikiPage.mainImage(),
-        wikiPage.summary(),
-      ]);
+      returnobject.wiki = {
+        title: await wikiPage.raw.title,
+        url: await wikiPage.raw.fullurl,
+        image: await wikiPage.mainImage(),
+        text: await wikiPage.summary(),
+      };
     } catch (e) {
       returnobject.error = true;
       Sentry.captureException(e);
@@ -62,46 +57,40 @@ export default {
     return returnobject;
   },
   // method to get the full article
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   getFullArticle: async () => {},
   /**
    * @function getReferences
-   * @param {String} argument - Keyword you want the references for
-   *
-   * @returns {Object} returnobject:
-   * {
-   *      error: Boolean,
-   *      results: Array[
-   *          title,
-   *          fullurl,
-   *          mainImage,
-   *          references
-   *      ]
-   * }
+   * @param {string} argument - Keyword you want the references for
+   * @returns {returnobject} returnobject with requested information
    *
    */
-  getReferences: async (argument: string) => {
-    const returnobject = {
-      error: false,
-      results: [Promise],
-    };
-    const headers = Constants.headers;
+  getReferences: async (
+    argument: string,
+  ): Promise<returnobject> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const headers: any = Constants.headers;
 
     try {
-      const sourceSearch = await wiki({ headers }).search(
-        argument,
-      );
-      const wikiPageSources = await wiki({ headers }).page(
-        sourceSearch.results[0],
-      );
+      const sourceSearch = await wiki({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        headers,
+      }).search(argument);
 
-      const sourceResults = await Promise.all([
-        wikiPageSources.raw.title,
-        wikiPageSources.raw.fullurl,
-        wikiPageSources.mainImage(),
-        wikiPageSources.references(),
-      ]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const wikiPageSources: any = await wiki({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        headers,
+      }).page(sourceSearch.results[0]);
 
-      returnobject.results = sourceResults;
+      returnobject.wiki = {
+        title: await wikiPageSources.raw.title,
+        url: await wikiPageSources.raw.fullurl,
+        image: await wikiPageSources.mainImage(),
+        refs: await wikiPageSources.references(),
+      };
     } catch (e) {
       returnobject.error = true;
       Sentry.captureException(e);
@@ -111,29 +100,28 @@ export default {
   },
   /**
    * @function getShortInformation
-   * @param {String} argument - argument you want to search for and get information on
-   *
-   * @returns {Object} returnobject:
-   * {
-   *      error: Boolean,
-   *      page: wikipediaPage,
-   *      info: wikipediaPage.info
-   * }
+   * @param {string} argument - argument you want to search for and get information on
+   * @returns {returnobject} returnobject
    */
-  getShortInformation: async (argument: string) => {
-    const returnobject = {
-      error: false,
-      page: '',
-      info: '',
-    };
-
+  getShortInformation: async (
+    argument: string,
+  ): Promise<returnobject> => {
     try {
       const data = await wiki().search(argument);
-      const page = await wiki().page(data.results[0]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const page: any = await wiki().page(data.results[0]);
+      const title = await page.raw.title;
+      const url = await page.raw.fullurl;
+      const image = await page.mainImage();
       const info = await page.fullInfo();
 
-      returnobject.page = page;
-      returnobject.info = info;
+      returnobject.wiki = {
+        title,
+        url,
+        image,
+        page,
+        info,
+      };
     } catch (e) {
       returnobject.error = true;
       Sentry.captureException(e);

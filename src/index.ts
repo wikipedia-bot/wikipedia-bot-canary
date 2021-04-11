@@ -1,21 +1,23 @@
-(async () => {
-  (await import('dotenv')).config();
-})();
+// import environmental variables
+import { config } from 'dotenv';
+config();
 
 import path from 'path';
 import express from 'express';
+import helmet from 'helmet';
 import { SlashCreator, ExpressServer } from 'slash-create';
 
 const app = express();
 
 app.use(express.json());
+app.use(helmet());
 
-app.listen(3333);
+app.listen(process.env.PORT);
 
 const creator = new SlashCreator({
   applicationID: process.env.APPLICATION_ID ?? '',
-  publicKey: process.env.PUBLIC_KEY ?? '',
-  token: process.env.TOKEN ?? '',
+  publicKey: process.env.PUBLIC_KEY,
+  token: process.env.TOKEN,
 });
 
 creator

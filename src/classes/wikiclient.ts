@@ -62,20 +62,26 @@ export default class wikiClient {
 
   public async getSummary(
     keyword: string,
-  ): Promise<Record<'link' | 'extract', string>> {
-    console.log(this.lang);
+  ): Promise<Record<'extract' | 'image', string>> {
     const res = await centra(
-      `https://${this.lang}.wikipedia.org/api/rest_v1/page/summary/${keyword}`,
-    )
-      .header('Accept', 'application/json')
-      .send();
-    console.log(res.headers['location']);
+      `https://${this.lang}.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|info|images&inprop=url&exintro=&explaintext=&titles=${keyword}`,
+    ).send();
 
     const json = await res.json();
-    console.log(json);
+    console.log(
+      json.query.pages[Object.keys(json.query.pages)[0]],
+    );
     return {
-      link: json.content_urls.desktop.page,
-      extract: json.extract,
+      extract:
+        json.query.pages[Object.keys(json.query.pages)[0]]
+          .extract,
+      image: `${
+        json.query.pages[Object.keys(json.query.pages)[0]]
+          .fullurl
+      }#/media/${
+        json.query.pages[Object.keys(json.query.pages)[0]]
+          .images[0].title
+      }`,
     };
   }
 }

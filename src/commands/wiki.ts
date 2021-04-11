@@ -44,12 +44,10 @@ module.exports = class HelloCommand extends SlashCommand {
   async run(ctx: CommandContext) {
     // send an initial response so we have time to make the requests
     ctx.defer();
-    console.log(ctx.options.language);
     const wiki = new wikiClient(ctx.options.language);
     const res = await wiki.search(ctx.options.keyword);
-    console.log(res);
     if (res.results.length < 1) {
-      ctx.send('', {
+      return {
         embeds: [
           {
             title: 'Error',
@@ -57,12 +55,11 @@ module.exports = class HelloCommand extends SlashCommand {
             color: Constants.Colors.RED,
           },
         ],
-      });
+      };
     } else {
       const page = await wiki.getSummary(res.results[0]);
-      console.log(page);
-      if (typeof page === 'number') {
-        ctx.send('', {
+      if (!page) {
+        return {
           embeds: [
             {
               title: 'Error',
@@ -70,22 +67,28 @@ module.exports = class HelloCommand extends SlashCommand {
               color: Constants.Colors.RED,
             },
           ],
-        });
+        };
       }
-      ctx.send('', {
+      return {
         embeds: [
           {
             title: 'Read the full Article',
-            url: page.link,
+            url: res.links[0],
             color: Constants.Colors.BLUE,
             author: {
               icon_url: Constants.wiki_logo,
               name: 'Wikipedia',
             },
-            description: page.extract,
+            thumbnail: {
+              url: page.image,
+            },
+            description:
+              page.extract.length > 2000
+                ? page.extract.slice(0, 2000) + '...'
+                : page.extract,
           },
         ],
-      });
+      };
     }
   }
 };

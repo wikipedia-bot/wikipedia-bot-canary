@@ -4,7 +4,7 @@ import {
   SlashCreator,
 } from 'slash-create';
 import wikiClient from '../classes/wikiclient';
-import Constants from '../Constanst';
+import embeds from '../util/embeds';
 
 module.exports = class HelloCommand extends SlashCommand {
   constructor(creator: SlashCreator) {
@@ -44,51 +44,27 @@ module.exports = class HelloCommand extends SlashCommand {
   async run(ctx: CommandContext) {
     // send an initial response so we have time to make the requests
     ctx.defer();
-    const wiki = new wikiClient(ctx.options.language);
+    const wiki = new wikiClient(
+      // if there was no language provided we fall back to the default langauge which in our case is english
+      ctx.options.language ?? 'en',
+    );
     const res = await wiki.search(ctx.options.keyword);
+    console.log(res);
     if (res.results.length < 1) {
-      return {
-        embeds: [
-          {
-            title: 'Error',
-            description: `There was nothing found matching: \n\n\`\`\`${ctx.options.keyword}\`\`\``,
-            color: Constants.Colors.RED,
-          },
-        ],
-      };
+      return embeds.error(
+        `There was nothing found matching: \n\n${ctx.options.keyword}`,
+      );
     } else {
       const page = await wiki.getSummary(res.results[0]);
-      if (!page) {
-        return {
-          embeds: [
-            {
-              title: 'Error',
-              description: `There was nothing found matching: \n\n\`\`\`${ctx.options.keyword}\`\`\``,
-              color: Constants.Colors.RED,
-            },
-          ],
-        };
-      }
-      return {
-        embeds: [
-          {
-            title: 'Read the full Article',
-            url: res.links[0],
-            color: Constants.Colors.BLUE,
-            author: {
-              icon_url: Constants.wiki_logo,
-              name: 'Wikipedia',
-            },
-            thumbnail: {
-              url: page.image,
-            },
-            description:
-              page.extract.length > 2000
-                ? page.extract.slice(0, 2000) + '...'
-                : page.extract,
-          },
-        ],
-      };
+      if (!page)
+        return embeds.error(
+          `There was nothing found matching: \n\n${ctx.options.keyword}`,
+        );
+      if (page.extract === '')
+        return embeds.error(
+          `There was nothing found matching: \n\n${ctx.options.keyword}`,
+        );
+      return embeds.wiki(res.links[0], page.extract);
     }
   }
 };

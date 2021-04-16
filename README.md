@@ -1,17 +1,19 @@
 <h1 align="center">🌍 Wikipedia Canary Bot (Beta) 🌎</h1>
 
-<h2 align="center"><a href="https://discord.com/oauth2/authorize?client_id=557923645532536852&scope=applications.commands"> Add it to your server WARNING: THIS IS A BETA VERSION</a></h2>
+<h3 align="center"><a href="https://discord.com/oauth2/authorize?client_id=557923645532536852&scope=applications.commands"> Add the bot to your server WARNING: THIS IS A BETA VERSION</a></h3>
 
-
+<p align="center">
 <a href="https://discord.gg/yAUmDNb">
     <img src="https://discordapp.com/api/guilds/358751806697897984/embed.png" alt="Discord Server Shield"/>
 </a>
 <a href="https://discordapp.com/oauth2/authorize?client_id=554751047030013953&scope=bot&permissions=3467328">
     <img src="https://img.shields.io/badge/Discord-Add%20Bot-7289DA.svg"/>
 </a>
+<img src="https://badges.fw-web.space/endpoint?url=https://wakapi.stlf.me/api/compat/shields/v1/meerbiene/interval:any/project:wikipedia-bot-canary&color=blue&label=Wikipedia%20Bot">
 <a href="https://github.com/wikipedia-bot/wikipedia-bot-canary/blob/main/LICENSE">
 <img alt="License: MIT" src="https://img.shields.io/github/license/wikipedia-bot/wikipedia-bot-canary" target="_blank" />
 </a>
+</p>
 
 ### 🏠 [Homepage & Commands](https://julianyaman.de)
 
